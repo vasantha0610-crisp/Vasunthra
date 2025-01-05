@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}a.active {
+  background-color: skyblue;}
+
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body bgcolor="deepskyblue">
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+<a href="Homepage.html">Home</a>
+  <a href="Loginpage.html">Login</a>
+  <a class="active" href="">About</a>
+  <a href="Contactpage.html">Feedback</a>
+</div>
+<b>
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Dashboard</span>
+</b>
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+</script>
+<center>
+<h1 style="font-size:3vw;color:White">EFFICIENT WATER QUALITY ANALYSIS AND PREDICTION USING MACHINE LEARNING</h1>
+</center>
+<p style="font-size:2vw;">        Water is considered as a vital resource that affects various aspects of human health and lives. The quality of water is a major concern for people living in urban areas. The quality of water serves as a powerful environmental determinant and a foundation for the prevention and control of waterborne diseases. However predicting the urban water quality is a challenging task since the water quality varies in urban spaces non-linearly and depends on multiple factors, such as meteorology, water usage patterns, and land uses, so this project aims at building a Machine Learning (ML) model to Predict Water Quality by considering all water quality standard indicators.
+</p>
+<center>
+<h1 style=font-family:"Times New Roman"><i>"Water is Life, Take Care of It !!"</i></h1>
+<img src="inputpageimage.jpeg"width="30%"height="30%">
+</center>
+<h2 style="font-family:verdana"><u>For futher details contact:</u><b>    xxx@gmail.com</b></h2>
+</body>
+</html>
