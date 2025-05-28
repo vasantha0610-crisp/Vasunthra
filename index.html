@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Coffee Shop</title>
+ <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=M+PLUS+Rounded+1c:wght@300&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: rgb(63, 24, 28);
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+      color: white;
+
+      background-image: url('C:/Users/vasan/Downloads/cof1.jpg');
+      
+       margin: 0;
+      height: 100vh; /* full viewport height */
+      image-rendering: auto;
+      background-size: cover;   
+          /* fills the screen */
+      background-position: center;   /* centers the image */
+      background-repeat: no-repeat;
+      width: 100%;
+  height: auto;
+  image-rendering: auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      flex-wrap: wrap;
+      background-color: #3f1818;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .blur-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  filter: blur(50px);
+  z-index: 0;}
+
+    .logo img {
+      width: 30px;
+      height: 30px;
+      margin-right: 8px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: chocolate;
+      
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px;
+      flex-wrap: wrap;
+    }
+
+    .hero-text {
+      position :relative;
+      top: 50px;
+      flex: 1;
+      min-width: 280px;
+      max-width: 500px;
+    }
+
+    .hero-text h2 {
+      font-family: "Pacifico", cursive;
+      color: rgb(216, 96, 11);
+      font-size: 40px;
+    }
+
+    .hero-text h3 {
+      font-size: 28px;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+
+    .hero-text p {
+      font-size: 18px;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .hero-buttons button {
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-order {
+      background-color: rgb(78, 36, 6);
+      color: rgb(255, 252, 252);
+    }
+
+    .btn-contact {
+      
+ color: rgb(78, 36, 6);
+     background-color: rgb(255, 250, 250);
+    }
+
+    .hero-image {
+      flex: 1;
+      text-align: center;
+      width:300px;
+      height: 400px;
+    }
+
+    .hero-image img {
+     position: relative;
+     top:-150px;
+     left:-150px;
+      width:800px;
+      height:700px;
+      z-index: 2;
+        filter: drop-shadow(2px 4px 6px black); margin-left: 50px;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-radius: 10px;
+       
+    }
+
+    @media (max-width: 768px) {
+      body{
+        background-size: contain;
+        mix-blend-mode: normal;
+
+      }
+      .hero-image{
+        width:100px;
+        height:100px;
+       position:relative;
+       left:-200px;
+       top:-100px;
+      }
+      .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+        padding: 20px;
+      }
+      .hero-text{
+        position: relative;
+        top:-390px;
+      }
+
+      .hero-text h2 {
+        font-size: 30px;
+        color:#3f1818;
+
+      }
+
+      .hero-text h3 {
+        font-size: 18px;
+      }
+
+      .hero-text p {
+        font-size: 14px;
+      }
+
+      .logo {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+
+      nav {
+        justify-content: center;
+        width: 100%;
+      }
+      .hero-buttons{
+        position:relative;
+        left:130px;
+      }
+      
+    }
+  </style>
+</head>
+
+<body>
+<div class="blur-bg"></div>
+  <header>
+    <div class="logo">
+      <img src="C:\Users\vasan\Downloads\1d86eedf-f4fe-4c58-bacf-268f15b79403_removalai_preview.png" alt="logo"/>
+      <span>Coffee</span>
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Menu</a>
+      <a href="#">Gallery</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h2>Best Coffee</h2>
+      <h3>Make your day great with our special coffee!!!</h3>
+      <p>Welcome to our coffee paradise, where every bean tells a story and every cup sparks joy.</p>
+      <div class="hero-buttons">
+        <button class="btn-order">Order Now</button>
+        <button class="btn-contact">Contact Us</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="C:\Users\vasan\Downloads\Cof.png" alt="Coffee Cup"/>
+    </div>
+  </section>
+
+</body>
+</html>
