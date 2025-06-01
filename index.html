@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Role-Based Employee Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f6fc;
+      color: #333;
+    }
+
+    #loginPage {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      color: #6f42c1;
+    }
+
+    .login-box input, .login-box select {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      width: 250px;
+    }
+
+    .login-box button {
+      padding: 10px;
+      width: 100%;
+      background: #6f42c1;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    nav {
+      background: #6f42c1;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 20px;
+      display: none;
+    }
+
+    nav button {
+      background: none;
+      color: white;
+      border: none;
+      text-align: left;
+      padding: 15px 20px;
+      font-size: 16px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    nav button:hover {
+      background: #5e35b1;
+    }
+
+    nav button i {
+      margin-right: 10px;
+    }
+
+    main {
+      margin-left: 220px;
+      padding: 30px;
+      display: none;
+    }
+
+    section {
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    input, select, textarea, button {
+      margin: 5px 0;
+      padding: 10px;
+      width: 250px;
+    }
+
+    .edit-btn {
+      background-color: #ffc107;
+      border: none;
+      color: #333;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    /* For task display in employee section */
+    #employeeTasksContainer {
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+      max-width: 450px;
+    }
+
+    #employeeTasksContainer h3 {
+      color: #6f42c1;
+      margin-bottom: 10px;
+    }
+
+    #employeeTasksContainer ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      color: #444;
+      font-size: 14px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Page -->
+<div id="loginPage">
+  <div class="login-box">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <select id="role">
+      <option value="admin">Admin</option>
+      <option value="employee">Employee</option>
+    </select>
+    <button onclick="login()">Login</button>
+    <p id="loginMsg" style="color:red;"></p>
+  </div>
+</div>
+
+<!-- Sidebar Navigation -->
+<nav id="sidebar">
+  <button onclick="showSection('homeSection')"><i class="fas fa-home"></i> Home</button>
+  <button id="addEmpBtn" onclick="showSection('employeeSection')"><i class="fas fa-user-plus"></i> Add Employee</button>
+  <button onclick="showSection('projectSection')"><i class="fas fa-tasks"></i> Project Tracker</button>
+  <button id="workAllocBtn" onclick="showSection('workSection')"><i class="fas fa-briefcase"></i> Work Allocation</button>
+  <button onclick="showSection('dailyUpdateSection')"><i class="fas fa-calendar-alt"></i> Daily Updates</button>
+  <button id="logoutBtn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</nav>
+
+<main id="appContent">
+  <section id="homeSection" class="active">
+    <h1>Welcome</h1>
+    <p style="font-style: italic; color: #6f42c1;">“Success comes to those who work.”</p>
+  </section>
+
+  <section id="employeeSection">
+    <h2>Add Employee</h2>
+    <input type="text" id="employeeName" placeholder="Employee Name" /><br>
+    <input type="date" id="joiningDate" /><br>
+    <button onclick="addEmployee()">Add</button>
+    <table id="employeeListTable">
+      <thead><tr><th>#</th><th>Employee Name</th><th>Joining Date</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- Task list shown here for each employee on selecting in table -->
+    <div id="employeeTasksContainer" style="display:none;">
+      <h3>Assigned Tasks</h3>
+      <ul id="employeeTasksList"></ul>
+    </div>
+  </section>
+
+  <section id="projectSection">
+    <h2>Project Tracker</h2>
+    <input type="text" id="projectName" placeholder="Project Name" /><br>
+    <select id="projectTeam"></select><br>
+    <input type="number" id="projectProgress" placeholder="Progress % (0-100)" /><br>
+    <button id="saveBtn" onclick="addOrUpdateProject()">Save Project</button>
+    <table id="projectTable">
+      <thead><tr><th>Name</th><th>Team</th><th>Progress</th><th>Status</th><th>Last Updated</th><th>Actions</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="workSection">
+    <h2>Work Allocation</h2>
+    <select id="workEmployee"></select><br>
+    <input type="text" id="workTask" placeholder="Task Description" /><br>
+    <label for="dueDate" style="font-weight: bold;">Due Date:</label><br>
+    <input type="date" id="dueDate" /><br>
+    <button onclick="assignTask()">Assign Task</button>
+    <div id="assignedTasks"></div>
+  </section>
+
+
+  <section id="dailyUpdateSection">
+    <h2>Daily Updates</h2>
+    <select id="updateEmployee"></select><br>
+    <input type="date" id="updateDate" /><br>
+    <textarea id="updateComment" placeholder="Today's update"></textarea><br>
+    <button onclick="submitDailyUpdate()">Submit</button>
+    <table id="dailyUpdateTable">
+      <thead><tr><th>Employee</th><th>Date</th><th>Update</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+
+
+<script>
+  const users = [
+    { username: "admin", password: "admin123", role: "admin" },
+    { username: "vasantha", password: "vas123", role: "employee" },
+    { username: "stuart", password: "stu123", role: "employee" },
+    { username: "gold", password: "gol123", role: "employee" }
+  ];
+
+  const employees = [];
+  const projects = [];
+  let editIndex = -1;
+  let currentUserRole = '';
+
+  // We'll keep track of assigned tasks as objects with: {employeeName, task, dueDate}
+  const assignedTasks = [];
+
+  function login() {
+    const uname = document.getElementById("username").value.trim();
+    const pwd = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
+
+    const match = users.find(u => u.username === uname && u.password === pwd && u.role === role);
+
+    if (match) {
+      currentUserRole = role;
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("sidebar").style.display = "flex";
+      document.getElementById("appContent").style.display = "block";
+
+      if (role === "employee") {
+  document.getElementById("addEmpBtn").style.display = "none";
+  document.getElementById("workAllocBtn").style.display = "none"; // Hide work allocation for employees
+  showEmployeeTasksOnHome(uname); // Show tasks on home page
+} else {
+  document.getElementById("addEmpBtn").style.display = "block";
+  document.getElementById("workAllocBtn").style.display = "block";
+  
+  // Remove employee tasks display if any
+  const taskDiv = document.getElementById('employeeTaskDisplayOnHome');
+  if (taskDiv) taskDiv.remove();
+}
+
+      // Reset login message
+      document.getElementById("loginMsg").textContent = '';
+
+      // Update selects with employees
+      updateEmployeeLists();
+
+      // Show default section
+      showSection('homeSection');
+    } else {
+      document.getElementById("loginMsg").textContent = "Invalid credentials!";
+    }
+  }
+
+  function logout() {
+    currentUserRole = '';
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("sidebar").style.display = "none";
+    document.getElementById("appContent").style.display = "none";
+
+    document.getElementById("username").value = '';
+    document.getElementById("password").value = '';
+    document.getElementById("role").value = 'admin';
+    document.getElementById("loginMsg").textContent = '';
+
+    document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+    document.getElementById('homeSection').classList.add('active');
+
+    // Clear tasks list in employee section
+    hideEmployeeTasks();
+  }
+
+  function showSection(id) {
+    document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    // Clear employee tasks list on section switch except employeeSection
+    if(id !== 'employeeSection') {
+      hideEmployeeTasks();
+    }
+  }
+
+  function addEmployee() {
+    const name = document.getElementById('employeeName').value.trim();
+    const date = document.getElementById('joiningDate').value;
+
+    if (!name || !date) {
+      alert('Please enter employee name and joining date.');
+      return;
+    }
+
+    // Check for duplicate employee names (simple check)
+    if (employees.some(e => e.name.toLowerCase() === name.toLowerCase())) {
+      alert('Employee already exists!');
+      return;
+    }
+
+    employees.push({ name, date });
+    updateEmployeeListTable();
+    updateEmployeeLists();
+
+    document.getElementById('employeeName').value = '';
+    document.getElementById('joiningDate').value = '';
+  }
+
+  function updateEmployeeListTable() {
+    const tbody = document.querySelector('#employeeListTable tbody');
+    tbody.innerHTML = '';
+    employees.forEach((emp, idx) => {
+      const row = tbody.insertRow();
+      row.insertCell().textContent = idx + 1;
+      row.insertCell().textContent = emp.name;
+      row.insertCell().textContent = emp.date;
+      row.style.cursor = 'pointer';
+
+      // On clicking employee row, show assigned tasks for that employee
+      row.onclick = () => {
+        showTasksForEmployee(emp.name);
+      };
+    });
+  }
+
+  function updateEmployeeLists() {
+    // Update all selects that show employees
+    const workEmp = document.getElementById('workEmployee');
+    const updateEmp = document.getElementById('updateEmployee');
+    const projectTeam = document.getElementById('projectTeam');
+
+    [workEmp, updateEmp, projectTeam].forEach(select => {
+      select.innerHTML = '';
+      employees.forEach(emp => {
+        const opt = document.createElement('option');
+        opt.value = emp.name;
+        opt.textContent = emp.name;
+        select.appendChild(opt);
+      });
+    });
+  }
+
+  function addOrUpdateProject() {
+    const name = document.getElementById('projectName').value.trim();
+    const team = document.getElementById('projectTeam').value;
+    const progress = Number(document.getElementById('projectProgress').value);
+
+    if (!name || !team || isNaN(progress) || progress < 0 || progress > 100) {
+      alert('Please enter valid project details.');
+      return;
+    }
+
+    if (editIndex === -1) {
+      projects.push({ name, team, progress, lastUpdated: new Date() });
+    } else {
+      projects[editIndex] = { name, team, progress, lastUpdated: new Date() };
+      editIndex = -1;
+      document.getElementById('saveBtn').textContent = "Save Project";
+    }
+
+    updateProjectTable();
+
+    document.getElementById('projectName').value = '';
+    document.getElementById('projectProgress').value = '';
+  }
+
+  function updateProjectTable() {
+    const tbody = document.querySelector('#projectTable tbody');
+    tbody.innerHTML = '';
+
+    projects.forEach((p, idx) => {
+      const row = tbody.insertRow();
+      row.insertCell().textContent = p.name;
+      row.insertCell().textContent = p.team;
+      row.insertCell().textContent = p.progress + '%';
+      row.insertCell().textContent = p.progress === 100 ? 'Completed' : 'In Progress';
+      row.insertCell().textContent = p.lastUpdated.toLocaleString();
+
+      const actionCell = row.insertCell();
+
+      const editBtn = document.createElement('button');
+      editBtn.className = 'edit-btn';
+      editBtn.textContent = 'Edit';
+      editBtn.onclick = () => {
+        document.getElementById('projectName').value = p.name;
+        document.getElementById('projectTeam').value = p.team;
+        document.getElementById('projectProgress').value = p.progress;
+        editIndex = idx;
+        document.getElementById('saveBtn').textContent = "Update Project";
+        showSection('projectSection');
+      };
+
+      actionCell.appendChild(editBtn);
+    });
+  }
+
+  // Assign Task function
+  function assignTask() {
+    const emp = document.getElementById('workEmployee').value;
+    const task = document.getElementById('workTask').value.trim();
+    const dueDate = document.getElementById('dueDate').value;
+
+    if (!task || !dueDate) {
+      alert('Please enter task and due date.');
+      return;
+    }
+
+    assignedTasks.push({ employeeName: emp, task, dueDate });
+    updateAssignedTasksDisplay();
+
+    document.getElementById('workTask').value = '';
+    document.getElementById('dueDate').value = '';
+
+    // Also update employee section if visible and if same employee selected
+    if(document.getElementById('employeeSection').classList.contains('active')) {
+      showTasksForEmployee(emp);
+    }
+  }
+
+  // Update assigned tasks section display (Work Allocation)
+  function updateAssignedTasksDisplay() {
+    const container = document.getElementById('assignedTasks');
+    container.innerHTML = '';
+
+    // Group tasks by employee
+    const grouped = {};
+    assignedTasks.forEach(t => {
+      if (!grouped[t.employeeName]) grouped[t.employeeName] = [];
+      grouped[t.employeeName].push(t);
+    });
+
+    // For each employee show tasks
+    for (const empName in grouped) {
+      const empDiv = document.createElement('div');
+      empDiv.style.marginBottom = '20px';
+      empDiv.innerHTML = `<h3 style="color:#6f42c1;">Tasks for ${empName}</h3>
+        <table style="width:100%; border-collapse: collapse;" border="1" cellpadding="5" cellspacing="0">
+          <thead><tr><th>Task</th><th>Due Date</th></tr></thead><tbody></tbody>
+        </table>`;
+      const tbody = empDiv.querySelector('tbody');
+      grouped[empName].forEach(t => {
+        const row = tbody.insertRow();
+        row.insertCell().textContent = t.task;
+        row.insertCell().textContent = t.dueDate;
+      });
+      container.appendChild(empDiv);
+    }
+  }
+
+  // Show tasks for employee in employee section read-only
+ function showTasksForEmployee(emp) 
+{
+  const container = document.getElementById('employeeTasksContainer');
+  const list = document.getElementById('employeeTasksList');
+
+  // Filter tasks for the employee
+  const tasks = assignedTasks.filter(t => t.employeeName === emp);
+
+  if (tasks.length === 0) {
+    container.style.display = 'none';
+    list.innerHTML = '';
+    return;
+  }
+
+  list.innerHTML = '';
+  tasks.forEach(t => {
+    const li = document.createElement('li');
+    li.textContent = `${t.task} (Due: ${t.dueDate})`;
+    list.appendChild(li);
+  });
+  container.style.display = 'block';
+}
+function showEmployeeTasksOnHome(emp) {
+  const homeSection = document.getElementById('homeSection');
+  
+  // Clear previous tasks display if any
+  let taskDiv = document.getElementById('employeeTaskDisplayOnHome');
+  if (!taskDiv) {
+    taskDiv = document.createElement('div');
+    taskDiv.id = 'employeeTaskDisplayOnHome';
+    taskDiv.style.marginTop = '20px';
+    taskDiv.style.padding = '10px';
+    taskDiv.style.border = '1px solid #ddd';
+    taskDiv.style.backgroundColor = '#fff';
+    homeSection.appendChild(taskDiv);
+  }
+
+  const tasks = assignedTasks.filter(t => t.employeeName === emp);
+
+  if (tasks.length === 0) {
+    taskDiv.innerHTML = `<h3 style="color:#6f42c1;">No Assigned Tasks</h3>`;
+    return;
+  }
+
+  let html = `<h3 style="color:#6f42c1;">Your Assigned Tasks</h3><ul style="text-align:left; padding-left:20px;">`;
+  tasks.forEach(t => {
+    html += `<li>${t.task} (Due: ${t.dueDate})</li>`;
+  });
+  html += '</ul>';
+
+  taskDiv.innerHTML = html;
+}
+
+
+  function hideEmployeeTasks() {
+    if(role === "employee") {
+  // Hide employee list and task container in employeeSection (optional)
+  document.getElementById('employeeTasksContainer').style.display = 'none';
+  document.getElementById('employeeListTable').parentElement.style.display = 'none';
+}
+
+   }
+
+  // Daily Updates Submit
+  function submitDailyUpdate() {
+    const emp = document.getElementById('updateEmployee').value;
+    const date = document.getElementById('updateDate').value;
+    const comment = document.getElementById('updateComment').value.trim();
+
+    if (!date || !comment) {
+      alert('Please select date and enter update.');
+      return;
+    }
+
+    const tableBody = document.getElementById('dailyUpdateTable').querySelector('tbody');
+    const row = tableBody.insertRow();
+    row.insertCell().textContent = emp;
+    row.insertCell().textContent = date;
+    row.insertCell().textContent = comment;
+
+    document.getElementById('updateDate').value = '';
+    document.getElementById('updateComment').value = '';
+  }
+
+
+</script>
+
+</body>
+</html>
+
